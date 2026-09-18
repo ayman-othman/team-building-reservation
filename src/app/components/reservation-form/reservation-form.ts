@@ -21,7 +21,6 @@ import {
 
 @Component({
   selector: 'app-reservation-form',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, CommonModule, ConfirmationModalComponent, MatButtonToggleModule],
   templateUrl: './reservation-form.html',
   styleUrl: './reservation-form.css',
