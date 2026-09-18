@@ -1,12 +1,5 @@
 import { Component, ChangeDetectionStrategy, signal, inject, OnDestroy } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -15,35 +8,20 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
 import { ReservationResponse } from '../../types/reservation';
 import { environment } from '../../../environment/environment';
 import { TRANSPORTATION_TYPE, RESERVATION_FORM_FIELDS } from './models/reservation.const';
-
-interface FileUpload {
-  file: File | null;
-  preview: string | null;
-  uploading: boolean;
-  progress: number;
-  downloadURL: string | null;
-  error: string | null;
-}
-
-const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-const MAX_FILE_SIZE_MB = 5;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-
-// Custom Validators
-function numbersOnlyValidator(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) return null;
-  const isNumeric = /^\d+$/.test(control.value);
-  return isNumeric ? null : { numbersOnly: true };
-}
-
-function outsourceEmployeeValidator(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) return null;
-  const startsWithOutsource = control.value.toString().startsWith('789');
-  return startsWithOutsource ? { outsourceEmployee: true } : null;
-}
+import { FileUpload } from './models/file-upload.interface';
+import {
+  ACCEPTED_TYPES,
+  MAX_FILE_SIZE_MB,
+  MAX_FILE_SIZE_BYTES,
+} from './models/reservation-form.const';
+import {
+  numbersOnlyValidator,
+  outsourceEmployeeValidator,
+} from './models/reservation-form.validators';
 
 @Component({
   selector: 'app-reservation-form',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, CommonModule, ConfirmationModalComponent, MatButtonToggleModule],
   templateUrl: './reservation-form.html',
   styleUrl: './reservation-form.css',
