@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
         <!-- Logo/Brand -->
         <div class="flex items-center gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow"
+            class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow"
           >
             <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -25,7 +26,7 @@ import { CommonModule } from '@angular/common';
           </div>
           <div>
             <h1 class="text-lg font-bold text-gray-900">Team Building</h1>
-            <p class="text-xs text-gray-500">Reservation System</p>
+            <p class="text-xs text-gray-500">Admin Portal</p>
           </div>
         </div>
 
@@ -33,9 +34,9 @@ import { CommonModule } from '@angular/common';
         <div class="flex items-center gap-2">
           <a
             routerLink="/"
-            routerLinkActive="bg-blue-50"
+            routerLinkActive="bg-red-50"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
+            class="px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
             title="Go to reservation form"
           >
             <svg class="w-4 h-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,22 +50,21 @@ import { CommonModule } from '@angular/common';
             Form
           </a>
 
-          <a
-            routerLink="/admin"
-            routerLinkActive="bg-blue-50"
-            class="px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
-            title="Go to admin dashboard"
+          <button
+            (click)="logout()"
+            class="px-4 py-2 rounded-lg font-medium text-white bg-red-600 hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+            title="Logout"
           >
             <svg class="w-4 h-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
               />
             </svg>
-            Admin
-          </a>
+            Logout
+          </button>
         </div>
       </nav>
     </header>
@@ -75,10 +75,18 @@ import { CommonModule } from '@angular/common';
         display: block;
       }
 
-      a.bg-blue-50 {
-        @apply text-blue-700;
+      a.bg-red-50 {
+        color: #b91c3e;
       }
     `,
   ],
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+}
