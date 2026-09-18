@@ -243,6 +243,8 @@ export class ReservationFormComponent implements OnDestroy {
     try {
       const staffId = this.form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.value as string;
       const name = this.form.get(RESERVATION_FORM_FIELDS.NAME)!.value as string;
+      const team = this.form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.value as string;
+      const note = this.form.get(RESERVATION_FORM_FIELDS.NOTE)!.value as string;
       const transportationType = this.form.get(RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE)!
         .value as string;
       const wantSingleRoom = this.form.get(RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM)!
@@ -254,6 +256,10 @@ export class ReservationFormComponent implements OnDestroy {
       const formData = new FormData();
       formData.append(RESERVATION_FORM_FIELDS.STAFF_ID, staffId);
       formData.append(RESERVATION_FORM_FIELDS.NAME, name);
+      formData.append(RESERVATION_FORM_FIELDS.DIGITAL_TEAM, team);
+      if (note) {
+        formData.append(RESERVATION_FORM_FIELDS.NOTE, note);
+      }
       formData.append(RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE, transportationType);
       formData.append(RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM, String(wantSingleRoom));
 
