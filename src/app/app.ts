@@ -4,6 +4,7 @@ import { HeaderComponent } from './components/header/header';
 import { AuthService } from './services/auth.service';
 import { signal, effect } from '@angular/core';
 import { filter } from 'rxjs/operators';
+// @ts-ignore
 import AOS from 'aos';
 
 @Component({
@@ -33,7 +34,7 @@ export class App implements OnInit {
         // Reinitialize AOS on route change
         this.ngZone.runOutsideAngular(() => {
           setTimeout(() => {
-            AOS.refresh();
+            (AOS as any).refresh();
           }, 100);
         });
       });
@@ -45,8 +46,8 @@ export class App implements OnInit {
   ngOnInit(): void {
     // Initialize AOS with custom configuration
     this.ngZone.runOutsideAngular(() => {
-      AOS.init({
-        duration: 800,
+      (AOS as any).init({
+        duration: 400,
         easing: 'ease-in-out',
         once: false,
         mirror: true,
@@ -62,4 +63,4 @@ export class App implements OnInit {
     const isAdmin = this.authService.isAdmin();
     this.showHeader.set(isAdminRoute && isAdmin);
   }
-}}
+}

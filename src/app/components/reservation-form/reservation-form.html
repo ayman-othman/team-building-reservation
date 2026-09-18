@@ -3,7 +3,11 @@
 ════════════════════════════════════════════════ -->
 @if (submitted()) {
   <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full text-center">
+    <div
+      class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full text-center"
+      data-aos="fade-up"
+      data-aos-duration="400"
+    >
       <!-- Success Icon -->
       <div
         class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6"
@@ -134,7 +138,7 @@
   <div class="min-h-screen bg-red-100 py-10 px-4">
     <div class="max-w-2xl mx-auto">
       <!-- Header -->
-      <header class="text-center mb-10" data-aos="fade-up" data-aos-duration="800">
+      <header class="text-center mb-10" data-aos="fade-up" data-aos-duration="400">
         <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-red-600 mb-4">
           <svg
             class="w-7 h-7 text-white"
@@ -167,7 +171,12 @@
         aria-label="Team Building Reservation Form"
       >
         <!-- ── EMPLOYEE INFORMATION ── -->
-        <section class="card mb-6" aria-labelledby="employee-section" data-aos="fade-up" data-aos-duration="800">
+        <section
+          class="card mb-6"
+          aria-labelledby="employee-section"
+          data-aos="fade-up"
+          data-aos-duration="400"
+        >
           <h2 id="employee-section" class="section-title">
             <span class="section-icon bg-red-100 text-red-600">
               <svg
@@ -323,7 +332,12 @@
         </section>
 
         <!-- ── TRANSPORTATION TYPE ── -->
-        <section class="card mb-6" aria-labelledby="transport-section" data-aos="fade-up" data-aos-duration="800">
+        <section
+          class="card mb-6"
+          aria-labelledby="transport-section"
+          data-aos="fade-up"
+          data-aos-duration="400"
+        >
           <h2 id="transport-section" class="section-title">
             <span class="section-icon bg-green-100 text-green-600">
               <svg
@@ -657,7 +671,12 @@
         </section>
 
         <!-- ── NATIONAL ID ── -->
-        <section class="card mb-8" aria-labelledby="nid-section">
+        <section
+          class="card mb-8"
+          aria-labelledby="nid-section"
+          data-aos="fade-up"
+          data-aos-duration="400"
+        >
           <h2 id="nid-section" class="section-title">
             <span class="section-icon bg-purple-100 text-purple-600">
               <svg
@@ -772,7 +791,12 @@
         </section>
 
         <!-- ── NOTES ── -->
-        <section class="card mb-6" aria-labelledby="notes-section">
+        <section
+          class="card mb-6"
+          aria-labelledby="notes-section"
+          data-aos="fade-up"
+          data-aos-duration="400"
+        >
           <div class="flex items-center justify-between">
             <h2 id="notes-section" class="section-title">
               <span class="section-icon bg-blue-100 text-blue-600">
@@ -860,6 +884,8 @@
 
         <!-- Submit button -->
         <button
+          data-aos="fade-up"
+          data-aos-duration="400"
           type="submit"
           [disabled]="isSubmitting()"
           class="w-full py-3 rounded-lg bg-red-600 text-white font-semibold text-base hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
@@ -890,7 +916,11 @@
         </button>
 
         <!-- More Info Section -->
-        <div class="mt-8 bg-white border border-gray-200 rounded-lg p-5">
+        <div
+          class="mt-8 bg-white border border-gray-200 rounded-lg p-5"
+          data-aos="fade-up"
+          data-aos-duration="400"
+        >
           <div class="flex gap-3 items-start">
             <svg
               class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
