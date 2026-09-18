@@ -10,11 +10,13 @@ export interface Reservation {
   id: string;
   staffId: string;
   name: string;
+  team: string;
   transportationType: 'Bus' | 'PrivateCar';
   wantSingleRoom: boolean;
   busReservationUrl: string | null;
   singleRoomReservationUrl: string | null;
   nationalIdUrls: string[];
+  note?: string | null;
   createdAt: Date | string;
 }
 
@@ -25,6 +27,7 @@ export interface Reservation {
 export interface CreateReservationRequest {
   staffId: string;
   name: string;
+  team: string;
   transportationType: 'Bus' | 'PrivateCar';
   wantSingleRoom: boolean;
   busReservation?: File;
@@ -39,11 +42,13 @@ export interface ReservationResponse {
   id: string;
   staffId: string;
   name: string;
+  team: string;
   transportationType: 'Bus' | 'PrivateCar';
   wantSingleRoom: boolean;
   busReservationUrl: string | null;
   singleRoomReservationUrl: string | null;
   nationalIdUrls: string[];
+  note?: string | null;
   createdAt: string; // ISO 8601 format
 }
 

@@ -98,7 +98,7 @@ import { Component, ChangeDetectionStrategy, input, output } from '@angular/core
           <button
             type="button"
             (click)="onConfirm()"
-            class="flex-1 px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            class="flex-1 px-4 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Confirm & Submit
           </button>

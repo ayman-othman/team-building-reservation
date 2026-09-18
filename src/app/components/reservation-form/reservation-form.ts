@@ -5,9 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Subscription } from 'rxjs';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal';
+import { CountdownComponent } from '../countdown/countdown';
 import { ReservationResponse } from '../../types/reservation';
 import { environment } from '../../../environment/environment';
-import { TRANSPORTATION_TYPE, RESERVATION_FORM_FIELDS } from './models/reservation.const';
+import {
+  TRANSPORTATION_TYPE,
+  RESERVATION_FORM_FIELDS,
+  DIGITAL_TEAMS,
+} from './models/reservation.const';
 import { FileUpload } from './models/file-upload.interface';
 import {
   ACCEPTED_TYPES,
@@ -21,7 +26,14 @@ import {
 
 @Component({
   selector: 'app-reservation-form',
-  imports: [ReactiveFormsModule, CommonModule, ConfirmationModalComponent, MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    ConfirmationModalComponent,
+    CountdownComponent,
+    MatButtonToggleModule,
+  ],
   templateUrl: './reservation-form.html',
   styleUrl: './reservation-form.css',
 })
@@ -33,6 +45,7 @@ export class ReservationFormComponent implements OnDestroy {
 
   public TRANSPORTATION_TYPE = TRANSPORTATION_TYPE;
   public RESERVATION_FORM_FIELDS = RESERVATION_FORM_FIELDS;
+  public DIGITAL_TEAMS = DIGITAL_TEAMS;
   // Form Group with all controls
   form = this.fb.group({
     [RESERVATION_FORM_FIELDS.STAFF_ID]: [
@@ -40,9 +53,11 @@ export class ReservationFormComponent implements OnDestroy {
       [Validators.required, numbersOnlyValidator, outsourceEmployeeValidator],
     ],
     [RESERVATION_FORM_FIELDS.NAME]: ['', [Validators.required]],
+    [RESERVATION_FORM_FIELDS.DIGITAL_TEAM]: ['', [Validators.required]],
     [RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE]: [TRANSPORTATION_TYPE.BUS as string],
     [RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM]: [false],
     [RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE]: ['single'],
+    [RESERVATION_FORM_FIELDS.NOTE]: [''],
   });
 
   // File uploads as signals
@@ -97,6 +112,7 @@ export class ReservationFormComponent implements OnDestroy {
   submitted = signal(false);
   referenceId = signal<string | null>(null);
   submitError = signal<string | null>(null);
+  notesExpanded = signal(false);
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

@@ -5,28 +5,28 @@
   aria-hidden="true"
 ></div>
 
-<!-- Detail Panel -->
+<!-- Detail Panel - Responsive (Sidebar on desktop, modal on mobile) -->
 <div
-  class="fixed right-0 top-0 bottom-0 w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto transform transition-transform duration-300"
+  class="fixed inset-0 md:right-0 md:top-0 md:bottom-0 md:left-auto md:w-full md:max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto transform transition-transform duration-300 md:rounded-none rounded-t-2xl max-h-screen md:max-h-screen"
   role="dialog"
   aria-modal="true"
   [attr.aria-label]="'Reservation details for ' + reservation().staffId"
 >
   <!-- Header -->
   <div
-    class="sticky top-0 bg-white border-b border-gray-100 px-6 py-6 flex items-center justify-between"
+    class="sticky top-0 bg-white border-b border-gray-100 px-4 md:px-6 py-4 md:py-6 flex items-center justify-between"
   >
-    <div>
-      <h2 class="text-2xl font-bold text-gray-900">Reservation Details</h2>
-      <p class="text-sm text-gray-500 mt-1">ID: {{ reservation().id }}</p>
+    <div class="flex-1">
+      <h2 class="text-xl md:text-2xl font-bold text-gray-900">Reservation Details</h2>
+      <p class="text-xs md:text-sm text-gray-500 mt-1 truncate">ID: {{ reservation().id }}</p>
     </div>
     <button
       (click)="onClose()"
-      class="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
+      class="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 flex-shrink-0 ml-2"
       title="Close"
       aria-label="Close panel"
     >
-      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -38,7 +38,7 @@
   </div>
 
   <!-- Content -->
-  <div class="px-6 py-6">
+  <div class="px-4 md:px-6 py-4 md:py-6">
     <!-- Reservation Info -->
     <section class="mb-8">
       <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -54,6 +54,27 @@
         <div class="flex justify-between items-start">
           <span class="text-gray-600 font-medium">Staff ID</span>
           <span class="text-gray-900 font-semibold">{{ reservation().staffId }}</span>
+        </div>
+        <div class="flex justify-between items-start">
+          <span class="text-gray-600 font-medium">Name</span>
+          <span class="text-gray-900 font-semibold">{{ reservation().name }}</span>
+        </div>
+        <div class="flex justify-between items-start">
+          <span class="text-gray-600 font-medium">Digital Team</span>
+          <span
+            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-sm font-medium"
+          >
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM0 16.68a6 6 0 0112 0 .75.75 0 01-.75.75H.75A.75.75 0 010 16.68zm13-8a3 3 0 11-6 0 3 3 0 016 0zm2.5 8.5a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zM18 12a1 1 0 100-2 1 1 0 000 2z"
+              />
+            </svg>
+            {{ reservation().team }}
+          </span>
+        </div>
+        <div class="flex justify-between items-start">
+          <span class="text-gray-600 font-medium">Transportation</span>
+          <span class="text-gray-900 font-semibold">{{ reservation().transportationType }}</span>
         </div>
         <div class="flex justify-between items-start">
           <span class="text-gray-600 font-medium">Created Date</span>
@@ -140,7 +161,7 @@
           <div class="bg-gray-50 border-t border-gray-200 px-4 py-3 flex gap-2 flex-wrap">
             <button
               (click)="onOpenFile(reservation().singleRoomReservationUrl!)"
-              class="flex-1 min-w-[120px] px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+              class="flex-1 min-w-[120px] px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
               title="Open in new tab"
             >
               <svg
@@ -183,9 +204,111 @@
       </section>
     }
 
+    <!-- Bus Reservation File -->
+    @if (reservation().busReservationUrl) {
+      <section class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M2 5a2 2 0 012-2h6a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707v8a2 2 0 01-2 2H4a2 2 0 01-2-2V5z"
+            />
+          </svg>
+          Bus Reservation Document
+        </h3>
+
+        <div
+          class="border border-gray-200 rounded-lg overflow-hidden hover:border-blue-300 transition-colors"
+        >
+          @if (isImageUrl(reservation().busReservationUrl!)) {
+            <!-- Image Preview -->
+            <img
+              [src]="reservation().busReservationUrl"
+              alt="Bus reservation document"
+              class="w-full h-auto max-h-64 object-cover"
+            />
+          } @else if (isPdfUrl(reservation().busReservationUrl!)) {
+            <!-- PDF Icon -->
+            <div class="bg-red-50 p-8 flex flex-col items-center justify-center">
+              <svg class="w-12 h-12 text-red-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                />
+              </svg>
+              <p class="text-gray-600 font-medium">PDF Document</p>
+              <p class="text-sm text-gray-500">Click "View Document" to open</p>
+            </div>
+          } @else {
+            <!-- Generic File Icon -->
+            <div class="bg-gray-50 p-8 flex flex-col items-center justify-center">
+              <svg
+                class="w-12 h-12 text-gray-400 mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <p class="text-gray-600 font-medium">
+                {{ getFileExtension(reservation().busReservationUrl!) }} File
+              </p>
+            </div>
+          }
+
+          <!-- File Actions -->
+          <div class="bg-gray-50 border-t border-gray-200 px-4 py-3 flex gap-2 flex-wrap">
+            <button
+              (click)="onOpenFile(reservation().busReservationUrl!)"
+              class="flex-1 min-w-[120px] px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+              title="Open in new tab"
+            >
+              <svg
+                class="w-4 h-4 inline mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+              View Document
+            </button>
+            <button
+              (click)="onDownloadFile(reservation().busReservationUrl!)"
+              class="flex-1 min-w-[120px] px-4 py-2 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm"
+              title="Download file"
+            >
+              <svg
+                class="w-4 h-4 inline mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              Download
+            </button>
+          </div>
+        </div>
+      </section>
+    }
+
     <!-- National ID Files -->
     @if (reservation().nationalIdUrls && reservation().nationalIdUrls.length > 0) {
-      <section>
+      <section class="mb-8">
         <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
@@ -246,7 +369,7 @@
               <div class="bg-gray-50 border-t border-gray-200 px-4 py-3 flex gap-2 flex-wrap">
                 <button
                   (click)="onOpenFile(fileUrl)"
-                  class="flex-1 min-w-[120px] px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+                  class="flex-1 min-w-[120px] px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
                   [title]="'View National ID file ' + (i + 1)"
                 >
                   <svg
@@ -287,6 +410,27 @@
               </div>
             </div>
           }
+        </div>
+      </section>
+    }
+
+    <!-- Additional Notes -->
+    @if (reservation().note) {
+      <section class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          Additional Notes
+        </h3>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p class="text-gray-700 whitespace-pre-wrap text-sm">{{ reservation().note }}</p>
         </div>
       </section>
     }

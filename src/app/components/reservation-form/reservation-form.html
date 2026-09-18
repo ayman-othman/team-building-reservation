@@ -2,12 +2,11 @@
      SUCCESS STATE
 ════════════════════════════════════════════════ -->
 @if (submitted()) {
-  <div
-    class="min-h-screen bg-gradient-to-br from-slate-50 to-red-50 flex items-center justify-center p-4"
-  >
-    <div class="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full text-center">
+      <!-- Success Icon -->
       <div
-        class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6"
+        class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6"
       >
         <svg
           class="w-10 h-10 text-green-600"
@@ -24,19 +23,78 @@
           />
         </svg>
       </div>
+
+      <!-- Heading -->
       <h1 class="text-2xl font-bold text-gray-900 mb-3">Reservation Submitted!</h1>
-      <p class="text-gray-600 mb-6">
-        Your team building reservation has been submitted successfully.
+
+      <!-- Positive Message -->
+      <p class="text-gray-600 mb-8 text-sm">
+        Thank you! Your reservation has been successfully submitted. We look forward to seeing you
+        at the team building event.
       </p>
+
+      <!-- Reference Number -->
       @if (referenceId()) {
-        <div class="bg-red-50 border border-red-100 rounded-xl p-4 mb-6">
-          <p class="text-xs text-red-600 font-medium uppercase tracking-wider mb-1">
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-8">
+          <p class="text-xs text-gray-600 font-medium uppercase tracking-wider mb-1">
             Reference Number
           </p>
-          <p class="text-red-900 font-mono font-bold text-lg break-all">{{ referenceId() }}</p>
+          <p class="text-gray-900 font-mono font-bold text-sm break-all">{{ referenceId() }}</p>
         </div>
       }
-      <p class="text-sm text-gray-400">Please save your reference number for future inquiries.</p>
+
+      <!-- Contact Section -->
+      <div class="border-t border-gray-200 pt-6">
+        <p class="text-xs text-gray-600 font-medium uppercase tracking-wider mb-4">
+          Need Help? Contact Us on WhatsApp
+        </p>
+        <div class="space-y-3">
+          <!-- Spoc -->
+          <a
+            href="https://wa.me/message/XXXXXXXXXXXXXX"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-50 hover:bg-green-100 text-green-700 font-medium text-sm transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.116-4.929 5.384-4.929 8.791 0 3.2.735 6.218 2.176 8.841L2.7 23.294l3.022-.798c2.44 1.328 5.187 2.027 8.021 2.027 8.801 0 15.916-7.114 15.916-15.917 0-4.23-1.664-8.21-4.686-11.231-3.022-3.022-7.044-4.687-11.231-4.687z"
+              />
+            </svg>
+            SPOC
+          </a>
+
+          <!-- Ahmed Waheed -->
+          <a
+            href="https://wa.me/201015812942"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-50 hover:bg-green-100 text-green-700 font-medium text-sm transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.116-4.929 5.384-4.929 8.791 0 3.2.735 6.218 2.176 8.841L2.7 23.294l3.022-.798c2.44 1.328 5.187 2.027 8.021 2.027 8.801 0 15.916-7.114 15.916-15.917 0-4.23-1.664-8.21-4.686-11.231-3.022-3.022-7.044-4.687-11.231-4.687z"
+              />
+            </svg>
+            Ahmed Waheed
+          </a>
+
+          <!-- Ayman Othman -->
+          <a
+            href="https://wa.me/201050123995"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-50 hover:bg-green-100 text-green-700 font-medium text-sm transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.116-4.929 5.384-4.929 8.791 0 3.2.735 6.218 2.176 8.841L2.7 23.294l3.022-.798c2.44 1.328 5.187 2.027 8.021 2.027 8.801 0 15.916-7.114 15.916-15.917 0-4.23-1.664-8.21-4.686-11.231-3.022-3.022-7.044-4.687-11.231-4.687z"
+              />
+            </svg>
+            Ayman Othman
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 }
@@ -45,13 +103,11 @@
      FORM STATE
 ════════════════════════════════════════════════ -->
 @if (!submitted()) {
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-red-50 py-10 px-4">
+  <div class="min-h-screen bg-red-100 py-10 px-4">
     <div class="max-w-2xl mx-auto">
       <!-- Header -->
       <header class="text-center mb-10">
-        <div
-          class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-red-600 mb-4 shadow-lg shadow-red-200"
-        >
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-red-600 mb-4">
           <svg
             class="w-7 h-7 text-white"
             fill="none"
@@ -70,7 +126,10 @@
         <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">
           Team Building Reservation
         </h1>
-        <p class="mt-2 text-gray-500">Complete the form below to reserve your spot.</p>
+        <p class="mt-2 text-gray-500">Digital Team</p>
+
+        <!-- Countdown Timer -->
+        <app-countdown></app-countdown>
       </header>
 
       <form
@@ -191,6 +250,48 @@
               <p id="name-error" class="field-error" role="alert">Full Name is required.</p>
             }
           </div>
+
+          <!-- Team -->
+          <div class="mt-5">
+            <label class="field-label" for="team">
+              Digital Team <span class="text-red-500" aria-label="required">*</span>
+            </label>
+            <select
+              id="team"
+              [formControlName]="RESERVATION_FORM_FIELDS.DIGITAL_TEAM"
+              class="field-input"
+              [style.borderColor]="
+                form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.invalid &&
+                form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.touched
+                  ? '#f87171'
+                  : '#e5e7eb'
+              "
+              [style.ringColor]="
+                form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.invalid &&
+                form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.touched
+                  ? '#fca5a5'
+                  : '#3b82f6'
+              "
+              aria-required="true"
+              [attr.aria-describedby]="
+                form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.invalid &&
+                form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.touched
+                  ? 'team-error'
+                  : null
+              "
+            >
+              <option value="" disabled selected>Select your digital team</option>
+              @for (team of DIGITAL_TEAMS; track team) {
+                <option [value]="team">{{ team }}</option>
+              }
+            </select>
+            @if (
+              form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.invalid &&
+              form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.touched
+            ) {
+              <p id="team-error" class="field-error" role="alert">Digital Team is required.</p>
+            }
+          </div>
         </section>
 
         <!-- ── TRANSPORTATION TYPE ── -->
@@ -198,18 +299,82 @@
           <h2 id="transport-section" class="section-title">
             <span class="section-icon bg-green-100 text-green-600">
               <svg
-                class="w-4 h-4"
-                fill="none"
+                width="24px"
+                height="24px"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7h12M8 11h12m-4 4H8m4 4H8m8-8h.01M16 20h.01"
-                />
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M4 10C4 6.22876 4 4.34315 5.17157 3.17157C6.34315 2 8.22876 2 12 2C15.7712 2 17.6569 2 18.8284 3.17157C20 4.34315 20 6.22876 20 10V12C20 15.7712 20 17.6569 18.8284 18.8284C17.6569 20 15.7712 20 12 20C8.22876 20 6.34315 20 5.17157 18.8284C4 17.6569 4 15.7712 4 12V10Z"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    opacity="0.5"
+                    d="M4 13H20"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M15.5 16H17"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M7 16H8.5"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    opacity="0.5"
+                    d="M6 19.5V21C6 21.5523 6.44772 22 7 22H8.5C9.05228 22 9.5 21.5523 9.5 21V20"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    opacity="0.5"
+                    d="M18 19.5V21C18 21.5523 17.5523 22 17 22H15.5C14.9477 22 14.5 21.5523 14.5 21V20"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    opacity="0.5"
+                    d="M20 9H21C21.5523 9 22 9.44772 22 10V11C22 11.3148 21.8518 11.6111 21.6 11.8L20 13"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    opacity="0.5"
+                    d="M4 9H3C2.44772 9 2 9.44772 2 10V11C2 11.3148 2.14819 11.6111 2.4 11.8L4 13"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    opacity="0.5"
+                    d="M19.5 5H4.5"
+                    stroke="#27af58"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  ></path>
+                </g>
               </svg>
             </span>
             Transportation Type
@@ -231,9 +396,9 @@
           @if (
             form.get(RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE)?.value === TRANSPORTATION_TYPE.BUS
           ) {
-            <div [class]="'mt-4 transition-all  opacity-100'">
-              <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p class="text-xs text-red-600 mb-2">Payment Required:</p>
+            <div [class]="'mt-4 opacity-100'">
+              <div class="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                <p class="text-xs text-gray-600 font-medium mb-2">Payment Required:</p>
                 <a
                   href="https://ipn.eg/S/ahmedwaheedibraheem/instapay/31eSLF"
                   target="_blank"
@@ -244,9 +409,32 @@
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/2/20/InstaPay_Logo.png"
                     alt="InstaPay"
-                    class="w-5 h-5"
+                    class="bg-white w-7 rounded"
                   />
-                  Pay 600 EGP via InstaPay
+                  <svg
+                    fill="#ffffff"
+                    width="15px"
+                    height="15px"
+                    viewBox="0 0 35 35"
+                    data-name="Layer 2"
+                    id="Layer_2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    stroke="#ffffff"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M21.81,34.75H21.5A3.8,3.8,0,0,1,18,31.58L16,20.12A1.36,1.36,0,0,0,14.88,19L3.42,17a3.84,3.84,0,0,1-.56-7.42L29.66.46h0a3.84,3.84,0,0,1,4.88,4.88l-9.11,26.8A3.79,3.79,0,0,1,21.81,34.75ZM30.47,2.83,3.66,11.94a1.34,1.34,0,0,0,.2,2.59l11.46,2a3.85,3.85,0,0,1,3.11,3.11l2,11.46a1.34,1.34,0,0,0,2.59.2L32.17,4.53a1.34,1.34,0,0,0-1.7-1.7Z"
+                      ></path>
+                    </g>
+                  </svg>
+
+                  Pay 600 EGP
                 </a>
               </div>
               <div class="flex items-center justify-between mb-2">
@@ -377,9 +565,8 @@
           <!-- Single Room Upload Box - Show when checkbox is enabled -->
           @if (form.get(RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM)?.value || false) {
             <div class="mt-4">
-              <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p class="text-xs text-red-600 mb-2">Payment Required:</p>
-
+              <div class="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                <p class="text-xs text-gray-600 font-medium mb-2">Payment Required:</p>
                 <a
                   href="https://ipn.eg/S/ahmedwaheedibraheem/instapay/31eSLF"
                   target="_blank"
@@ -390,9 +577,32 @@
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/2/20/InstaPay_Logo.png"
                     alt="InstaPay"
-                    class="w-5 h-5"
+                    class="bg-white w-7 rounded"
                   />
-                  Pay 4500 EGP via InstaPay
+
+                  <svg
+                    fill="#ffffff"
+                    width="15px"
+                    height="15px"
+                    viewBox="0 0 35 35"
+                    data-name="Layer 2"
+                    id="Layer_2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    stroke="#ffffff"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M21.81,34.75H21.5A3.8,3.8,0,0,1,18,31.58L16,20.12A1.36,1.36,0,0,0,14.88,19L3.42,17a3.84,3.84,0,0,1-.56-7.42L29.66.46h0a3.84,3.84,0,0,1,4.88,4.88l-9.11,26.8A3.79,3.79,0,0,1,21.81,34.75ZM30.47,2.83,3.66,11.94a1.34,1.34,0,0,0,.2,2.59l11.46,2a3.85,3.85,0,0,1,3.11,3.11l2,11.46a1.34,1.34,0,0,0,2.59.2L32.17,4.53a1.34,1.34,0,0,0-1.7-1.7Z"
+                      ></path>
+                    </g>
+                  </svg>
+                  Pay 4500 EGP
                 </a>
               </div>
               <label class="block text-sm font-semibold mb-3 text-red-900">
@@ -447,7 +657,7 @@
             aria-label="National ID upload mode"
             class="mt-4"
           >
-            <mat-button-toggle value="single"> Single file (both sides) </mat-button-toggle>
+            <mat-button-toggle value="single"> Both sides </mat-button-toggle>
             <mat-button-toggle value="double"> Front + Back separately </mat-button-toggle>
           </mat-button-toggle-group>
 
@@ -533,9 +743,75 @@
           }
         </section>
 
+        <!-- ── NOTES ── -->
+        <section class="card mb-6" aria-labelledby="notes-section">
+          <div class="flex items-center justify-between">
+            <h2 id="notes-section" class="section-title">
+              <span class="section-icon bg-blue-100 text-blue-600">
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </span>
+              Additional Notes
+            </h2>
+            <button
+              type="button"
+              (click)="notesExpanded.set(!notesExpanded())"
+              class="p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-400"
+              [attr.aria-expanded]="notesExpanded()"
+              aria-label="Toggle notes section"
+            >
+              <svg
+                class="w-5 h-5 transition-transform"
+                [class.rotate-180]="notesExpanded()"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
+            </button>
+          </div>
+
+          @if (notesExpanded()) {
+            <p class="mt-3 text-sm text-gray-400">
+              Add any additional information or notes about your reservation.
+            </p>
+
+            <div class="mt-5">
+              <label class="field-label" for="notes">Notes</label>
+              <textarea
+                id="notes"
+                [formControlName]="RESERVATION_FORM_FIELDS.NOTE"
+                placeholder="e.g., The uploaded bus reservation is for more than one staff ID&#10;Example: Staff IDs: 123, 456, 789"
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 resize-vertical"
+                rows="5"
+                aria-label="Additional notes"
+              ></textarea>
+            </div>
+          }
+        </section>
+
         <!-- Submit error -->
         @if (submitError()) {
-          <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex gap-3" role="alert">
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex gap-3" role="alert">
             <svg
               class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"
               fill="none"
@@ -558,7 +834,7 @@
         <button
           type="submit"
           [disabled]="isSubmitting()"
-          class="w-full py-4 rounded-2xl bg-red-600 text-white font-bold text-base shadow-lg shadow-red-200 hover:bg-red-700 active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
+          class="w-full py-3 rounded-lg bg-red-600 text-white font-semibold text-base hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
           [attr.aria-busy]="isSubmitting()"
         >
           @if (isSubmitting()) {
@@ -586,7 +862,7 @@
         </button>
 
         <!-- More Info Section -->
-        <div class="mt-8 bg-red-50 border border-red-200 rounded-xl p-6">
+        <div class="mt-8 bg-white border border-gray-200 rounded-lg p-5">
           <div class="flex gap-3 items-start">
             <svg
               class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
@@ -632,11 +908,11 @@
 <ng-template #fileUpload let-target let-label="label">
   <div class="upload-zone">
     <label
-      class="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-red-300 rounded-2xl bg-red-50 hover:bg-red-100 hover:border-red-400 transition-all cursor-pointer group focus-within:ring-2 focus-within:ring-red-400 focus-within:ring-offset-2"
+      class="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-gray-300 rounded-lg bg-white hover:bg-gray-50 cursor-pointer group focus-within:ring-2 focus-within:ring-red-400 focus-within:ring-offset-2"
     >
       <!-- Upload Icon -->
       <svg
-        class="w-12 h-12 mb-3 text-red-500 group-hover:text-red-600 transition-colors"
+        class="w-12 h-12 mb-3 text-gray-400 group-hover:text-gray-500"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -681,7 +957,7 @@
   <div class="file-preview-card">
     @if (state.error) {
       <div
-        class="flex items-center gap-2 p-3 bg-red-50 rounded-xl border border-red-200 text-red-700 text-sm"
+        class="flex items-center gap-2 p-3 bg-red-50 rounded-lg border border-red-200 text-red-700 text-sm"
       >
         <svg
           class="w-4 h-4 flex-shrink-0"
@@ -703,7 +979,7 @@
       <div class="flex items-center gap-4">
         <!-- Thumbnail or PDF icon -->
         <div
-          class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border border-gray-200"
+          class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border border-gray-200"
         >
           @if (state.preview) {
             <img [src]="state.preview" alt="Preview" class="w-full h-full object-cover" />
@@ -760,7 +1036,7 @@
         <button
           type="button"
           (click)="removeFile(target)"
-          class="flex-shrink-0 p-2 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+          class="flex-shrink-0 p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-400"
           [attr.aria-label]="'Remove ' + state.file?.name"
         >
           <svg
