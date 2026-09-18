@@ -31,7 +31,10 @@ export class AuthService {
   }
 
   login(username: string, password: string): boolean {
-    if (username === this.ADMIN_CREDENTIALS.username && password === this.ADMIN_CREDENTIALS.password) {
+    if (
+      username === this.ADMIN_CREDENTIALS.username &&
+      password === this.ADMIN_CREDENTIALS.password
+    ) {
       const user: User = { username };
       localStorage.setItem('auth_token', 'admin-token-' + Date.now());
       localStorage.setItem('current_user', JSON.stringify(user));
@@ -50,6 +53,8 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.isAuthenticated() && this.currentUser()?.username === this.ADMIN_CREDENTIALS.username;
+    return (
+      this.isAuthenticated() && this.currentUser()?.username === this.ADMIN_CREDENTIALS.username
+    );
   }
 }
