@@ -1,0 +1,64 @@
+/* Admin Dashboard Styles */
+
+/* Table responsive behavior */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  tr {
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+  }
+
+  td {
+    padding-left: 6rem !important;
+    position: relative;
+    border: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    width: 5rem;
+  }
+}
+
+/* Smooth transitions */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+/* Animation for loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
