@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, NgZone } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from './components/header/header';
 import { AuthService } from './services/auth.service';
 import { signal, effect } from '@angular/core';
 import { filter } from 'rxjs/operators';
+import AOS from 'aos';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,10 @@ import { filter } from 'rxjs/operators';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {
+export class App implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private ngZone = inject(NgZone);
 
   showHeader = signal(false);
 
@@ -28,10 +30,30 @@ export class App {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.updateHeaderVisibility(event.url);
+        // Reinitialize AOS on route change
+        this.ngZone.runOutsideAngular(() => {
+          setTimeout(() => {
+            AOS.refresh();
+          }, 100);
+        });
       });
 
     // Initial check
     this.updateHeaderVisibility(this.router.url);
+  }
+
+  ngOnInit(): void {
+    // Initialize AOS with custom configuration
+    this.ngZone.runOutsideAngular(() => {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: false,
+        mirror: true,
+        anchorPlacement: 'top-center',
+        offset: 100,
+      });
+    });
   }
 
   private updateHeaderVisibility(url: string): void {
@@ -40,4 +62,4 @@ export class App {
     const isAdmin = this.authService.isAdmin();
     this.showHeader.set(isAdminRoute && isAdmin);
   }
-}
+}}
