@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'https://team-building-reservation-backend-prod.up.railway.app',
+  apiUrl: 'https://team-building-reservation-backend-production.up.railway.app',
 };
