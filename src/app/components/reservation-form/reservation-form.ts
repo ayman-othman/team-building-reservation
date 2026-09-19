@@ -1,5 +1,21 @@
-import { Component, ChangeDetectionStrategy, signal, inject, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  inject,
+  OnDestroy,
+  effect,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  ReactiveFormsModule,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -46,20 +62,29 @@ export class ReservationFormComponent implements OnDestroy {
   public TRANSPORTATION_TYPE = TRANSPORTATION_TYPE;
   public RESERVATION_FORM_FIELDS = RESERVATION_FORM_FIELDS;
   public DIGITAL_TEAMS = DIGITAL_TEAMS;
-  // Form Group with all controls
-  form = this.fb.group({
-    [RESERVATION_FORM_FIELDS.STAFF_ID]: [
-      '',
-      [Validators.required, numbersOnlyValidator, outsourceEmployeeValidator],
-    ],
-    [RESERVATION_FORM_FIELDS.NAME]: ['', [Validators.required]],
-    [RESERVATION_FORM_FIELDS.DIGITAL_TEAM]: ['', [Validators.required]],
-    [RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE]: [TRANSPORTATION_TYPE.BUS as string],
-    [RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM]: [false],
-    [RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE]: ['single'],
-    [RESERVATION_FORM_FIELDS.NOTE]: [''],
-  });
 
+  // National ID mode state signal
+  nationalIdMode = signal<'single' | 'double'>('single');
+  form = this.fb.group(
+    {
+      [RESERVATION_FORM_FIELDS.STAFF_ID]: [
+        '',
+        [Validators.required, numbersOnlyValidator, outsourceEmployeeValidator],
+      ],
+      [RESERVATION_FORM_FIELDS.NAME]: ['', [Validators.required]],
+      [RESERVATION_FORM_FIELDS.DIGITAL_TEAM]: ['', [Validators.required]],
+      [RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE]: [TRANSPORTATION_TYPE.BUS as string],
+      [RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM]: [false],
+      [RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID]: [''],
+      busReservation: this.fb.array([], [Validators.required]),
+      nationalIds: this.fb.array([], [Validators.required]),
+      [RESERVATION_FORM_FIELDS.NOTE]: [''],
+    },
+    // { validators: this.createSubmitValidator() },
+  );
+  constructor() {
+    this.setupTransportationTypeListener();
+  }
   // File uploads as signals
   busFile = signal<FileUpload>({
     file: null,
@@ -113,6 +138,45 @@ export class ReservationFormComponent implements OnDestroy {
   referenceId = signal<string | null>(null);
   submitError = signal<string | null>(null);
   notesExpanded = signal(false);
+
+  private setupTransportationTypeListener(): void {
+    const transportationTypeControl = this.form.get(RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE);
+    const busReservationArray = this.form.get('busReservation') as FormArray;
+
+    if (transportationTypeControl) {
+      this.subscriptions.add(
+        transportationTypeControl.valueChanges.subscribe((value) => {
+          if (value === TRANSPORTATION_TYPE.BUS) {
+            busReservationArray.setValidators([Validators.required]);
+          } else {
+            busReservationArray.clearValidators();
+            busReservationArray.clear();
+          }
+          busReservationArray.updateValueAndValidity();
+        }),
+      );
+    }
+  }
+
+  private createSubmitValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+      // Check single room file if single room is requested
+      if (
+        group.get(RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM)?.value &&
+        !this.singleRoomFile().file
+      ) {
+        return { missingSingleRoomFile: true };
+      }
+
+      // Check national IDs FormArray
+      const nationalIdsArray = group.get('nationalIds') as FormArray;
+      if (!nationalIdsArray || nationalIdsArray.length === 0) {
+        return { missingNationalIds: true };
+      }
+
+      return null;
+    };
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -199,6 +263,13 @@ export class ReservationFormComponent implements OnDestroy {
       downloadURL: null,
       error: null,
     });
+
+    // Update FormArrays when files change
+    if (target === 'bus') {
+      this.updateBusReservationFormArray();
+    } else if (target.startsWith('nationalId')) {
+      this.updateNationalIdsFormArray();
+    }
   }
 
   private getFileSignal(
@@ -219,6 +290,64 @@ export class ReservationFormComponent implements OnDestroy {
     updates: Partial<FileUpload>,
   ): void {
     this.getFileSignal(target).update((current) => ({ ...current, ...updates }));
+
+    // Update FormArrays when files change
+    if (target === 'bus') {
+      this.updateBusReservationFormArray();
+    } else if (target.startsWith('nationalId')) {
+      this.updateNationalIdsFormArray();
+    }
+  }
+
+  private updateNationalIdsFormArray(): void {
+    const nationalIdsArray = this.form.get('nationalIds') as FormArray;
+    const count = this.getNationalIdFileCount();
+
+    // Clear and rebuild the array based on current file count
+    while (nationalIdsArray.length > 0) {
+      nationalIdsArray.removeAt(0);
+    }
+
+    // Add a control for each uploaded national ID file
+    for (let i = 0; i < count; i++) {
+      nationalIdsArray.push(this.fb.control({ value: `nationalId_${i}`, disabled: false }));
+    }
+  }
+
+  private updateBusReservationFormArray(): void {
+    const busReservationArray = this.form.get('busReservation') as FormArray;
+    const transportationType = this.form.get(RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE)?.value;
+
+    // Only update if transportation type is BUS
+    if (transportationType !== TRANSPORTATION_TYPE.BUS) {
+      return;
+    }
+
+    // Clear and rebuild the array based on file status
+    while (busReservationArray.length > 0) {
+      busReservationArray.removeAt(0);
+    }
+
+    // Add a control if bus file is uploaded
+    if (this.busFile().file) {
+      busReservationArray.push(this.fb.control({ value: 'busReservation_0', disabled: false }));
+    }
+  }
+
+  private getNationalIdFileCount(): number {
+    if (this.nationalIdMode() === 'single') {
+      return this.nationalIdFile().file ? 1 : 0;
+    } else {
+      let count = 0;
+      if (this.nationalIdFrontFile().file) count++;
+      if (this.nationalIdBackFile().file) count++;
+      return count;
+    }
+  }
+
+  changeNationalIdMode(mode: 'single' | 'double'): void {
+    this.nationalIdMode.set(mode);
+    this.updateNationalIdsFormArray();
   }
 
   // ─────────────────────────────────────────
@@ -244,19 +373,22 @@ export class ReservationFormComponent implements OnDestroy {
       const staffId = this.form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.value as string;
       const name = this.form.get(RESERVATION_FORM_FIELDS.NAME)!.value as string;
       const team = this.form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.value as string;
+      const roommateStaffId = this.form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!
+        .value as string;
       const note = this.form.get(RESERVATION_FORM_FIELDS.NOTE)!.value as string;
       const transportationType = this.form.get(RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE)!
         .value as string;
       const wantSingleRoom = this.form.get(RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM)!
         .value as boolean;
-      const nationalIdMode = this.form.get(RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE)!
-        .value as string;
 
       // Build FormData with files
       const formData = new FormData();
       formData.append(RESERVATION_FORM_FIELDS.STAFF_ID, staffId);
       formData.append(RESERVATION_FORM_FIELDS.NAME, name);
       formData.append(RESERVATION_FORM_FIELDS.DIGITAL_TEAM, team);
+      if (roommateStaffId) {
+        formData.append(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID, roommateStaffId);
+      }
       if (note) {
         formData.append(RESERVATION_FORM_FIELDS.NOTE, note);
       }
@@ -273,10 +405,10 @@ export class ReservationFormComponent implements OnDestroy {
         formData.append('singleRoomReservation', this.singleRoomFile().file!);
       }
 
-      // Add National ID files as array
-      if (nationalIdMode === 'single' && this.nationalIdFile().file) {
+      // Add National ID files as array based on mode
+      if (this.nationalIdMode() === 'single' && this.nationalIdFile().file) {
         formData.append('nationalIds', this.nationalIdFile().file!);
-      } else if (nationalIdMode === 'double') {
+      } else if (this.nationalIdMode() === 'double') {
         if (this.nationalIdFrontFile().file) {
           formData.append('nationalIds', this.nationalIdFrontFile().file!);
         }

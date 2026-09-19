@@ -3,11 +3,7 @@
 ════════════════════════════════════════════════ -->
 @if (submitted()) {
   <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-    <div
-      class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full text-center"
-      data-aos="fade-up"
-      data-aos-duration="800"
-    >
+    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full text-center fade-up">
       <!-- Success Icon -->
       <div
         class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6"
@@ -138,7 +134,7 @@
   <div class="min-h-screen bg-red-100 py-10 px-4">
     <div class="max-w-2xl mx-auto">
       <!-- Header -->
-      <header class="text-center mb-10" data-aos="fade-up" data-aos-duration="800">
+      <header class="text-center mb-10 fade-up">
         <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-red-600 mb-4">
           <svg
             class="w-7 h-7 text-white"
@@ -171,12 +167,7 @@
         aria-label="Team Building Reservation Form"
       >
         <!-- ── EMPLOYEE INFORMATION ── -->
-        <section
-          class="card mb-6"
-          aria-labelledby="employee-section"
-          data-aos="fade-up"
-          data-aos-duration="800"
-        >
+        <section class="card mb-6 fade-up" aria-labelledby="employee-section">
           <h2 id="employee-section" class="section-title">
             <span class="section-icon bg-red-100 text-red-600">
               <svg
@@ -197,55 +188,100 @@
             Employee Information
           </h2>
 
-          <!-- Staff ID -->
-          <div class="mt-5">
-            <label class="field-label" for="staffId">
-              Staff ID <span class="text-red-500" aria-label="required">*</span>
-            </label>
-            <input
-              id="staffId"
-              type="text"
-              inputmode="numeric"
-              [formControlName]="RESERVATION_FORM_FIELDS.STAFF_ID"
-              placeholder="Enter your Staff ID (numbers only)"
-              autocomplete="off"
-              class="field-input"
-              [style.borderColor]="
+          <!-- Staff ID & Roommate Staff ID - Side by side -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Staff ID -->
+            <div class="mt-5">
+              <label class="field-label" for="staffId">
+                Staff ID <span class="text-red-500" aria-label="required">*</span>
+              </label>
+              <input
+                id="staffId"
+                type="text"
+                inputmode="numeric"
+                [formControlName]="RESERVATION_FORM_FIELDS.STAFF_ID"
+                placeholder="Enter your Staff ID (numbers only)"
+                autocomplete="off"
+                class="field-input"
+                [style.borderColor]="
+                  form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.invalid &&
+                  form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.touched
+                    ? '#f87171'
+                    : '#e5e7eb'
+                "
+                [style.ringColor]="
+                  form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.invalid &&
+                  form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.touched
+                    ? '#fca5a5'
+                    : '#3b82f6'
+                "
+                aria-required="true"
+                [attr.aria-describedby]="
+                  form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.invalid &&
+                  form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.touched
+                    ? 'staffId-error'
+                    : null
+                "
+              />
+              @if (
                 form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.invalid &&
                 form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.touched
-                  ? '#f87171'
-                  : '#e5e7eb'
-              "
-              [style.ringColor]="
-                form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.invalid &&
-                form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.touched
-                  ? '#fca5a5'
-                  : '#3b82f6'
-              "
-              aria-required="true"
-              [attr.aria-describedby]="
-                form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.invalid &&
-                form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.touched
-                  ? 'staffId-error'
-                  : null
-              "
-            />
-            @if (
-              form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.invalid &&
-              form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.touched
-            ) {
-              <p id="staffId-error" class="field-error" role="alert">
-                @if (form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.errors?.['required']) {
-                  Staff ID is required.
-                } @else if (form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.errors?.['numbersOnly']) {
-                  Staff ID must contain numbers only.
-                } @else if (
-                  form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.errors?.['outsourceEmployee']
-                ) {
-                  OutSource employee not allowed.
-                }
-              </p>
-            }
+              ) {
+                <p id="staffId-error" class="field-error" role="alert">
+                  @if (form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.errors?.['required']) {
+                    Staff ID is required.
+                  } @else if (form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.errors?.['numbersOnly']) {
+                    Staff ID must contain numbers only.
+                  } @else if (
+                    form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.errors?.['outsourceEmployee']
+                  ) {
+                    OutSource employee not allowed.
+                  }
+                </p>
+              }
+            </div>
+
+            <!-- Roommate Staff ID -->
+            <div class="mt-5">
+              <label class="field-label" for="roommateStaffId">
+                Roommate Staff ID <span class="text-gray-400 text-xs">(optional)</span>
+              </label>
+              <input
+                id="roommateStaffId"
+                type="text"
+                inputmode="numeric"
+                [formControlName]="RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID"
+                placeholder="Enter roommate's Staff ID (if applicable)"
+                autocomplete="off"
+                class="field-input"
+                [style.borderColor]="
+                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
+                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
+                    ? '#f87171'
+                    : '#e5e7eb'
+                "
+                [style.ringColor]="
+                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
+                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
+                    ? '#fca5a5'
+                    : '#3b82f6'
+                "
+                [attr.aria-describedby]="
+                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
+                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
+                    ? 'roommateStaffId-error'
+                    : null
+                "
+              />
+              @if (
+                form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
+                form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
+              ) {
+                <p id="roommateStaffId-error" class="field-error" role="alert">
+                  Invalid Roommate Staff ID format.
+                </p>
+              }
+            </div>
           </div>
 
           <!-- Name -->
@@ -332,12 +368,7 @@
         </section>
 
         <!-- ── TRANSPORTATION TYPE ── -->
-        <section
-          class="card mb-6"
-          aria-labelledby="transport-section"
-          data-aos="fade-up"
-          data-aos-duration="800"
-        >
+        <section class="card mb-6 fade-up" aria-labelledby="transport-section">
           <h2 id="transport-section" class="section-title">
             <span class="section-icon bg-green-100 text-green-600">
               <svg
@@ -671,12 +702,7 @@
         </section>
 
         <!-- ── NATIONAL ID ── -->
-        <section
-          class="card mb-8"
-          aria-labelledby="nid-section"
-          data-aos="fade-up"
-          data-aos-duration="800"
-        >
+        <section class="card mb-8 fade-up" aria-labelledby="nid-section">
           <h2 id="nid-section" class="section-title">
             <span class="section-icon bg-purple-100 text-purple-600">
               <svg
@@ -700,7 +726,8 @@
 
           <!-- Mode toggle -->
           <mat-button-toggle-group
-            [formControlName]="RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE"
+            [value]="nationalIdMode()"
+            (change)="changeNationalIdMode($event.value)"
             aria-label="National ID upload mode"
             class="mt-4"
           >
@@ -709,9 +736,7 @@
           </mat-button-toggle-group>
 
           <!-- Single mode -->
-          @if (
-            (form.get(RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE)?.value || 'single') === 'single'
-          ) {
+          @if (nationalIdMode() === 'single') {
             <div class="mt-4">
               <p class="text-xs text-gray-400 mb-3">
                 Upload one file containing both sides of your National ID.
@@ -735,9 +760,7 @@
           }
 
           <!-- Double mode -->
-          @if (
-            (form.get(RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE)?.value || 'single') === 'double'
-          ) {
+          @if (nationalIdMode() === 'double') {
             <div class="mt-4 space-y-4">
               <div>
                 <p class="text-xs font-semibold text-gray-600 mb-2">National ID – Front</p>
@@ -780,7 +803,7 @@
 
           @if (
             form.get(RESERVATION_FORM_FIELDS.STAFF_ID)?.touched &&
-            !((form.get(RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE)?.value || 'single') === 'single'
+            !(nationalIdMode() === 'single'
               ? nationalIdFile().file !== null
               : nationalIdFrontFile().file !== null && nationalIdBackFile().file !== null)
           ) {
@@ -791,12 +814,7 @@
         </section>
 
         <!-- ── NOTES ── -->
-        <section
-          class="card mb-6"
-          aria-labelledby="notes-section"
-          data-aos="fade-up"
-          data-aos-duration="800"
-        >
+        <section class="card mb-6 fade-up" aria-labelledby="notes-section">
           <div class="flex items-center justify-between">
             <h2 id="notes-section" class="section-title">
               <span class="section-icon bg-blue-100 text-blue-600">
@@ -885,8 +903,13 @@
         <!-- Submit button -->
         <button
           type="submit"
-          [disabled]="isSubmitting()"
-          class="w-full py-3 rounded-lg bg-red-600 text-white font-semibold text-base hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+          [disabled]="form.invalid || isSubmitting()"
+          class="w-full py-3 rounded-lg font-semibold text-base transition-all duration-200 fade-up"
+          [class]="
+            !form.invalid
+              ? 'bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer'
+              : 'text-gray-400 bg-gray-600 cursor-not-allowed'
+          "
           [attr.aria-busy]="isSubmitting()"
         >
           @if (isSubmitting()) {
@@ -1127,7 +1150,7 @@
         TRANSPORTATION_TYPE.BUS && !!busFile().file
     "
     [nationalIdLabel]="
-      (form.get(RESERVATION_FORM_FIELDS.NATIONAL_ID_MODE)?.value || 'single') === 'single'
+      nationalIdMode() === 'single'
         ? nationalIdFile().file
           ? '1 file (both sides)'
           : 'Not uploaded'

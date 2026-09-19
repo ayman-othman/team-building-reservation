@@ -9,6 +9,7 @@
 export interface Reservation {
   id: string;
   staffId: string;
+  roommateStaffId?: string | null;
   name: string;
   team: string;
   transportationType: 'Bus' | 'PrivateCar';
@@ -41,6 +42,7 @@ export interface CreateReservationRequest {
 export interface ReservationResponse {
   id: string;
   staffId: string;
+  roommateStaffId?: string | null;
   name: string;
   team: string;
   transportationType: 'Bus' | 'PrivateCar';
