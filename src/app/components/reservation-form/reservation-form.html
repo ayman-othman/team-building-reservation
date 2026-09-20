@@ -241,45 +241,76 @@
               }
             </div>
 
-            <!-- Roommate Staff ID -->
-            <div class="mt-5">
-              <label class="field-label" for="roommateStaffId">
-                Roommate Staff ID <span class="text-gray-400 text-xs">(optional)</span>
-              </label>
-              <input
-                id="roommateStaffId"
-                type="text"
-                inputmode="numeric"
-                [formControlName]="RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID"
-                placeholder="Enter roommate's Staff ID (if applicable)"
-                autocomplete="off"
-                class="field-input"
-                [style.borderColor]="
-                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
-                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
-                    ? '#f87171'
-                    : '#e5e7eb'
-                "
-                [style.ringColor]="
-                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
-                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
-                    ? '#fca5a5'
-                    : '#3b82f6'
-                "
-                [attr.aria-describedby]="
-                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
-                  form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
-                    ? 'roommateStaffId-error'
-                    : null
-                "
-              />
-              @if (
-                form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.invalid &&
-                form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!.touched
-              ) {
-                <p id="roommateStaffId-error" class="field-error" role="alert">
-                  Invalid Roommate Staff ID format.
-                </p>
+            <!-- Roommate Staff IDs (FormArray) -->
+            <div class="mt-5" [formArrayName]="RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID">
+              <div class="flex items-center justify-between mb-3">
+                <label class="field-label">
+                  Roommate Staff IDs <span class="text-gray-400 text-xs">(optional - max 2)</span>
+                </label>
+                @if (canAddMoreroommatestuffid()) {
+                  <button
+                    type="button"
+                    (click)="addRoommateStaffId()"
+                    class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-700 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    title="Add another roommate"
+                  >
+                    <svg
+                      class="w-4 h-4 inline mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                  </button>
+                }
+              </div>
+
+              @if (roommatestuffid().length === 0) {
+                <p class="text-sm text-gray-500 italic">No roommates added yet.</p>
+              } @else {
+                <div class="space-y-3">
+                  @for (roommate of roommatestuffid(); track $index; let i = $index) {
+                    <div class="flex gap-2 items-start">
+                      <input
+                        type="text"
+                        inputmode="numeric"
+                        [formControlName]="i"
+                        placeholder="Enter roommate's Staff ID"
+                        autocomplete="off"
+                        class="field-input flex-1"
+                      />
+                      @if (roommatestuffid().length > 1) {
+                        <button
+                          type="button"
+                          (click)="removeRoommateStaffId(i)"
+                          class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 flex-shrink-0"
+                          title="Remove roommate"
+                          [attr.aria-label]="'Remove roommate ' + (i + 1)"
+                        >
+                          <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
               }
             </div>
           </div>
@@ -851,7 +882,6 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                Add Roommate
               </button>
             }
           </div>

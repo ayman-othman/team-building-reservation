@@ -42,7 +42,7 @@ export interface CreateReservationRequest {
 export interface ReservationResponse {
   id: string;
   staffId: string;
-  roommateStaffId?: string | null;
+  roommatestuffid?: string[] | string | null;
   name: string;
   team: string;
   transportationType: 'Bus' | 'PrivateCar';

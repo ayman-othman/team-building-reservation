@@ -247,10 +247,22 @@
                     }
                   </td>
                   <td class="px-4 py-3 text-sm">
-                    @if (reservation.roommateStaffId) {
-                      <span class="font-medium text-gray-900">{{
-                        reservation.roommateStaffId
-                      }}</span>
+                    @if (reservation.roommatestuffid) {
+                      @if (Array.isArray(reservation.roommatestuffid)) {
+                        @if (reservation.roommatestuffid.length > 0) {
+                          <span
+                            class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-medium"
+                          >
+                            {{ reservation.roommatestuffid.join(', ') }}
+                          </span>
+                        } @else {
+                          <span class="text-gray-400">—</span>
+                        }
+                      } @else {
+                        <span class="font-medium text-gray-900">{{
+                          reservation.roommatestuffid
+                        }}</span>
+                      }
                     } @else {
                       <span class="text-gray-400">—</span>
                     }
@@ -380,13 +392,29 @@
                 }
               </div>
 
-              <!-- Roommate ID -->
+              <!-- Roommate IDs -->
               <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Roommate</p>
-                @if (reservation?.roommateStaffId) {
-                  <p class="text-gray-900 font-medium text-sm mt-1">
-                    {{ reservation?.roommateStaffId }}
-                  </p>
+                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Roommates</p>
+                @if (reservation.roommatestuffid) {
+                  @if (Array.isArray(reservation.roommatestuffid)) {
+                    @if (reservation.roommatestuffid.length > 0) {
+                      <div class="flex flex-wrap gap-1 mt-1">
+                        @for (id of reservation.roommatestuffid; track id) {
+                          <span
+                            class="inline-flex items-center px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-700 text-xs font-medium"
+                          >
+                            {{ id }}
+                          </span>
+                        }
+                      </div>
+                    } @else {
+                      <span class="text-gray-400 text-sm">None</span>
+                    }
+                  } @else {
+                    <p class="text-gray-900 font-medium text-sm mt-1">
+                      {{ reservation.roommatestuffid }}
+                    </p>
+                  }
                 } @else {
                   <span class="text-gray-400 text-sm">None</span>
                 }

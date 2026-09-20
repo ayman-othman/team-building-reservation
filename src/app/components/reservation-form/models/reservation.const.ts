@@ -9,7 +9,7 @@ export const RESERVATION_FORM_FIELDS = {
   DIGITAL_TEAM: 'team',
   TRANSPORTATION_TYPE: 'transportationType',
   WANT_SINGLE_ROOM: 'wantSingleRoom',
-  ROOMMATE_STAFF_ID: 'roommatestuffid',
+  ROOMMATE_STAFF_ID: 'roommatestuffid', // FormData field name for backend
   BUS_RESERVATION: 'busReservation',
   NATIONAL_ID_MODE: 'nationalIdMode',
   ROOMMATE_NATIONAL_IDS: 'roommateNationalIds',

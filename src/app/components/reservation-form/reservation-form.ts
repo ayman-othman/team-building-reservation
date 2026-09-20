@@ -68,6 +68,9 @@ export class ReservationFormComponent implements OnDestroy {
 
   // Roommate national ID modes (tracks mode for each roommate)
   roommateNationalIdModes = signal<('single' | 'double')[]>(['single']);
+
+  // Roommate staff IDs (tracks staff ID for each roommate)
+  roommatestuffid = signal<string[]>(['']);
   form = this.fb.group(
     {
       [RESERVATION_FORM_FIELDS.STAFF_ID]: [
@@ -78,7 +81,7 @@ export class ReservationFormComponent implements OnDestroy {
       [RESERVATION_FORM_FIELDS.DIGITAL_TEAM]: ['', [Validators.required]],
       [RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE]: [TRANSPORTATION_TYPE.BUS as string],
       [RESERVATION_FORM_FIELDS.WANT_SINGLE_ROOM]: [false],
-      [RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID]: [''],
+      [RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID]: this.fb.array([this.fb.control('')]),
       busReservation: this.fb.array([], [Validators.required]),
       nationalIds: this.fb.array([], [Validators.required]),
       roommateNationalIds: this.fb.array([], [Validators.required]),
@@ -652,6 +655,32 @@ export class ReservationFormComponent implements OnDestroy {
     return this.roommateNationalIdFiles().length < 2;
   }
 
+  addRoommateStaffId(): void {
+    const current = this.roommatestuffid();
+    if (current.length < 2) {
+      this.roommatestuffid.set([...current, '']);
+      const formArray = this.form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID) as FormArray;
+      formArray.push(this.fb.control(''));
+    }
+  }
+
+  removeRoommateStaffId(index: number): void {
+    const current = this.roommatestuffid();
+    if (current.length > 1) {
+      this.roommatestuffid.update((ids) => {
+        const updated = [...ids];
+        updated.splice(index, 1);
+        return updated;
+      });
+      const formArray = this.form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID) as FormArray;
+      formArray.removeAt(index);
+    }
+  }
+
+  canAddMoreroommatestuffid(): boolean {
+    return this.roommatestuffid().length < 2;
+  }
+
   getRoommateNationalIdFile(
     index: number,
     mode: 'single' | 'double',
@@ -698,8 +727,9 @@ export class ReservationFormComponent implements OnDestroy {
       const staffId = this.form.get(RESERVATION_FORM_FIELDS.STAFF_ID)!.value as string;
       const name = this.form.get(RESERVATION_FORM_FIELDS.NAME)!.value as string;
       const team = this.form.get(RESERVATION_FORM_FIELDS.DIGITAL_TEAM)!.value as string;
-      const roommateStaffId = this.form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID)!
-        .value as string;
+      const roommatestuffidArray = (
+        this.form.get(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID) as FormArray
+      ).value as string[];
       const note = this.form.get(RESERVATION_FORM_FIELDS.NOTE)!.value as string;
       const transportationType = this.form.get(RESERVATION_FORM_FIELDS.TRANSPORTATION_TYPE)!
         .value as string;
@@ -711,9 +741,11 @@ export class ReservationFormComponent implements OnDestroy {
       formData.append(RESERVATION_FORM_FIELDS.STAFF_ID, staffId);
       formData.append(RESERVATION_FORM_FIELDS.NAME, name);
       formData.append(RESERVATION_FORM_FIELDS.DIGITAL_TEAM, team);
-      if (roommateStaffId) {
-        formData.append(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID, roommateStaffId);
-      }
+      roommatestuffidArray.forEach((roommateStaffId) => {
+        if (roommateStaffId && roommateStaffId.trim()) {
+          formData.append(RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID, roommateStaffId);
+        }
+      });
       if (note) {
         formData.append(RESERVATION_FORM_FIELDS.NOTE, note);
       }

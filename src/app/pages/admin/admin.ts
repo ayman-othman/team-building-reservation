@@ -25,6 +25,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   private readonly adminService = inject(AdminService);
   private subscriptions = new Subscription();
 
+  // Expose Array for template usage
+  Array = Array;
+
   // State
   reservations = signal<ReservationResponse[]>([]);
   filteredReservations = computed(() => {

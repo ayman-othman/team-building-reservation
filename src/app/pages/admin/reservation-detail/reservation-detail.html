@@ -100,9 +100,26 @@
           }
         </div>
         <div class="flex justify-between items-start">
-          <span class="text-gray-600 font-medium">Roommate Staff ID</span>
-          @if (reservation().roommateStaffId) {
-            <span class="text-gray-900 font-semibold">{{ reservation().roommateStaffId }}</span>
+          <span class="text-gray-600 font-medium">Roommate Staff IDs</span>
+          @if (reservation().roommatestuffid) {
+            @if (
+              Array.isArray(reservation().roommatestuffid) &&
+              (reservation().roommatestuffid ?? []).length > 0
+            ) {
+              <div class="flex flex-wrap gap-2 justify-end">
+                @for (roommateId of reservation().roommatestuffid; track roommateId) {
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-700 text-sm font-medium"
+                  >
+                    {{ roommateId }}
+                  </span>
+                }
+              </div>
+            } @else if (!Array.isArray(reservation().roommatestuffid)) {
+              <span class="text-gray-900 font-semibold">{{ reservation().roommatestuffid }}</span>
+            } @else {
+              <span class="text-gray-400">—</span>
+            }
           } @else {
             <span class="text-gray-400">—</span>
           }

@@ -13,6 +13,9 @@ export class ReservationDetailComponent {
   reservation = input.required<ReservationResponse>();
   close = output<void>();
 
+  // Expose Array for template usage
+  Array = Array;
+
   previewUrl = computed(() => {
     const urls = this.reservation().nationalIdUrls;
     return Array.isArray(urls) && urls.length > 0 ? urls[0] : null;
