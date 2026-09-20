@@ -136,10 +136,12 @@ export class ReservationFormComponent implements OnDestroy {
   });
 
   // Roommate national ID files (up to 2 roommates - supports both single and double modes)
-  roommateNationalIdFiles = signal<{
-    single: FileUpload;
-    double: { front: FileUpload; back: FileUpload };
-  }[]>([
+  roommateNationalIdFiles = signal<
+    {
+      single: FileUpload;
+      double: { front: FileUpload; back: FileUpload };
+    }[]
+  >([
     {
       single: {
         file: null,
@@ -372,7 +374,11 @@ export class ReservationFormComponent implements OnDestroy {
     }
   }
 
-  private processRoommateFile(index: number, fileType: 'single' | 'front' | 'back', file: File): void {
+  private processRoommateFile(
+    index: number,
+    fileType: 'single' | 'front' | 'back',
+    file: File,
+  ): void {
     const error = this.validateFile(file);
     const preview = this.buildPreview(file);
 
@@ -646,7 +652,11 @@ export class ReservationFormComponent implements OnDestroy {
     return this.roommateNationalIdFiles().length < 2;
   }
 
-  getRoommateNationalIdFile(index: number, mode: 'single' | 'double', fileType?: 'front' | 'back'): FileUpload {
+  getRoommateNationalIdFile(
+    index: number,
+    mode: 'single' | 'double',
+    fileType?: 'front' | 'back',
+  ): FileUpload {
     const roommate = this.roommateNationalIdFiles()[index];
     if (mode === 'single') {
       return roommate.single;
