@@ -9,9 +9,10 @@ export const RESERVATION_FORM_FIELDS = {
   DIGITAL_TEAM: 'team',
   TRANSPORTATION_TYPE: 'transportationType',
   WANT_SINGLE_ROOM: 'wantSingleRoom',
-  ROOMMATE_STAFF_ID: 'roommateStaffId',
+  ROOMMATE_STAFF_ID: 'roommatestuffid',
   BUS_RESERVATION: 'busReservation',
   NATIONAL_ID_MODE: 'nationalIdMode',
+  ROOMMATE_NATIONAL_IDS: 'roommateNationalIds',
   NOTE: 'note',
 };
 

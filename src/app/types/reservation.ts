@@ -50,6 +50,7 @@ export interface ReservationResponse {
   busReservationUrl: string | null;
   singleRoomReservationUrl: string | null;
   nationalIdUrls: string[];
+  roommateNationalIds?: string[] | null;
   note?: string | null;
   createdAt: string; // ISO 8601 format
 }

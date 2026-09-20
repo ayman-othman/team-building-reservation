@@ -65,6 +65,9 @@ export class ReservationFormComponent implements OnDestroy {
 
   // National ID mode state signal
   nationalIdMode = signal<'single' | 'double'>('single');
+
+  // Roommate national ID modes (tracks mode for each roommate)
+  roommateNationalIdModes = signal<('single' | 'double')[]>(['single']);
   form = this.fb.group(
     {
       [RESERVATION_FORM_FIELDS.STAFF_ID]: [
@@ -78,6 +81,7 @@ export class ReservationFormComponent implements OnDestroy {
       [RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID]: [''],
       busReservation: this.fb.array([], [Validators.required]),
       nationalIds: this.fb.array([], [Validators.required]),
+      roommateNationalIds: this.fb.array([], [Validators.required]),
       [RESERVATION_FORM_FIELDS.NOTE]: [''],
     },
     // { validators: this.createSubmitValidator() },
@@ -130,6 +134,41 @@ export class ReservationFormComponent implements OnDestroy {
     downloadURL: null,
     error: null,
   });
+
+  // Roommate national ID files (up to 2 roommates - supports both single and double modes)
+  roommateNationalIdFiles = signal<{
+    single: FileUpload;
+    double: { front: FileUpload; back: FileUpload };
+  }[]>([
+    {
+      single: {
+        file: null,
+        preview: null,
+        uploading: false,
+        progress: 0,
+        downloadURL: null,
+        error: null,
+      },
+      double: {
+        front: {
+          file: null,
+          preview: null,
+          uploading: false,
+          progress: 0,
+          downloadURL: null,
+          error: null,
+        },
+        back: {
+          file: null,
+          preview: null,
+          uploading: false,
+          progress: 0,
+          downloadURL: null,
+          error: null,
+        },
+      },
+    },
+  ]);
 
   // UI state signals
   showModal = signal(false);
@@ -195,6 +234,15 @@ export class ReservationFormComponent implements OnDestroy {
         URL.revokeObjectURL(f.preview);
       }
     });
+
+    // Revoke roommate preview URLs
+    this.roommateNationalIdFiles().forEach((roommate) => {
+      [roommate.single, roommate.double.front, roommate.double.back].forEach((f) => {
+        if (f.preview?.startsWith('blob:')) {
+          URL.revokeObjectURL(f.preview);
+        }
+      });
+    });
   }
 
   // ─────────────────────────────────────────
@@ -217,12 +265,24 @@ export class ReservationFormComponent implements OnDestroy {
 
   onFileSelected(
     event: Event,
-    target: 'bus' | 'singleRoom' | 'nationalId' | 'nationalIdFront' | 'nationalIdBack',
+    target:
+      | 'bus'
+      | 'singleRoom'
+      | 'nationalId'
+      | 'nationalIdFront'
+      | 'nationalIdBack'
+      | 'roommateNationalId',
+    roommateIndex?: number,
+    roommateFileType?: 'single' | 'front' | 'back',
   ): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (file) {
-      this.processFile(target, file);
+      if (target === 'roommateNationalId' && roommateIndex !== undefined && roommateFileType) {
+        this.processRoommateFile(roommateIndex, roommateFileType, file);
+      } else {
+        this.processFile(target as Exclude<typeof target, 'roommateNationalId'>, file);
+      }
     }
     input.value = '';
   }
@@ -249,13 +309,26 @@ export class ReservationFormComponent implements OnDestroy {
   }
 
   removeFile(
-    target: 'bus' | 'singleRoom' | 'nationalId' | 'nationalIdFront' | 'nationalIdBack',
+    target:
+      | 'bus'
+      | 'singleRoom'
+      | 'nationalId'
+      | 'nationalIdFront'
+      | 'nationalIdBack'
+      | 'roommateNationalId',
+    roommateIndex?: number,
+    roommateFileType?: 'single' | 'front' | 'back',
   ): void {
-    const current = this.getFileSignal(target)();
+    if (target === 'roommateNationalId' && roommateIndex !== undefined && roommateFileType) {
+      this.removeRoommateFileInternal(roommateIndex, roommateFileType);
+      return;
+    }
+
+    const current = this.getFileSignal(target as Exclude<typeof target, 'roommateNationalId'>)();
     if (current.preview?.startsWith('blob:')) {
       URL.revokeObjectURL(current.preview);
     }
-    this.getFileSignal(target).set({
+    this.getFileSignal(target as Exclude<typeof target, 'roommateNationalId'>).set({
       file: null,
       preview: null,
       uploading: false,
@@ -297,6 +370,122 @@ export class ReservationFormComponent implements OnDestroy {
     } else if (target.startsWith('nationalId')) {
       this.updateNationalIdsFormArray();
     }
+  }
+
+  private processRoommateFile(index: number, fileType: 'single' | 'front' | 'back', file: File): void {
+    const error = this.validateFile(file);
+    const preview = this.buildPreview(file);
+
+    this.roommateNationalIdFiles.update((current) => {
+      const updated = [...current];
+      if (fileType === 'single') {
+        updated[index] = {
+          ...updated[index],
+          single: {
+            file: error ? null : file,
+            preview: error ? null : preview,
+            error: error || null,
+            uploading: false,
+            progress: 0,
+            downloadURL: null,
+          },
+        };
+      } else if (fileType === 'front') {
+        updated[index] = {
+          ...updated[index],
+          double: {
+            ...updated[index].double,
+            front: {
+              file: error ? null : file,
+              preview: error ? null : preview,
+              error: error || null,
+              uploading: false,
+              progress: 0,
+              downloadURL: null,
+            },
+          },
+        };
+      } else if (fileType === 'back') {
+        updated[index] = {
+          ...updated[index],
+          double: {
+            ...updated[index].double,
+            back: {
+              file: error ? null : file,
+              preview: error ? null : preview,
+              error: error || null,
+              uploading: false,
+              progress: 0,
+              downloadURL: null,
+            },
+          },
+        };
+      }
+      return updated;
+    });
+
+    this.updateRoommateNationalIdsFormArray();
+  }
+
+  private removeRoommateFileInternal(index: number, fileType: 'single' | 'front' | 'back'): void {
+    this.roommateNationalIdFiles.update((current) => {
+      const updated = [...current];
+      if (fileType === 'single') {
+        if (updated[index].single.preview?.startsWith('blob:')) {
+          URL.revokeObjectURL(updated[index].single.preview!);
+        }
+        updated[index] = {
+          ...updated[index],
+          single: {
+            file: null,
+            preview: null,
+            uploading: false,
+            progress: 0,
+            downloadURL: null,
+            error: null,
+          },
+        };
+      } else if (fileType === 'front') {
+        if (updated[index].double.front.preview?.startsWith('blob:')) {
+          URL.revokeObjectURL(updated[index].double.front.preview!);
+        }
+        updated[index] = {
+          ...updated[index],
+          double: {
+            ...updated[index].double,
+            front: {
+              file: null,
+              preview: null,
+              uploading: false,
+              progress: 0,
+              downloadURL: null,
+              error: null,
+            },
+          },
+        };
+      } else if (fileType === 'back') {
+        if (updated[index].double.back.preview?.startsWith('blob:')) {
+          URL.revokeObjectURL(updated[index].double.back.preview!);
+        }
+        updated[index] = {
+          ...updated[index],
+          double: {
+            ...updated[index].double,
+            back: {
+              file: null,
+              preview: null,
+              uploading: false,
+              progress: 0,
+              downloadURL: null,
+              error: null,
+            },
+          },
+        };
+      }
+      return updated;
+    });
+
+    this.updateRoommateNationalIdsFormArray();
   }
 
   private updateNationalIdsFormArray(): void {
@@ -348,6 +537,132 @@ export class ReservationFormComponent implements OnDestroy {
   changeNationalIdMode(mode: 'single' | 'double'): void {
     this.nationalIdMode.set(mode);
     this.updateNationalIdsFormArray();
+  }
+
+  changeRoommateNationalIdMode(roommateIndex: number, mode: 'single' | 'double'): void {
+    this.roommateNationalIdModes.update((modes) => {
+      const updated = [...modes];
+      updated[roommateIndex] = mode;
+      return updated;
+    });
+  }
+
+  private updateRoommateNationalIdsFormArray(): void {
+    const roommateNationalIdsArray = this.form.get('roommateNationalIds') as FormArray;
+    let totalUploadedCount = 0;
+
+    // Count uploaded files based on each roommate's mode
+    this.roommateNationalIdFiles().forEach((roommate, index) => {
+      const mode = this.roommateNationalIdModes()[index];
+      if (mode === 'single' && roommate.single.file) {
+        totalUploadedCount++;
+      } else if (mode === 'double') {
+        if (roommate.double.front.file) totalUploadedCount++;
+        if (roommate.double.back.file) totalUploadedCount++;
+      }
+    });
+
+    // Clear and rebuild the array based on uploaded files
+    while (roommateNationalIdsArray.length > 0) {
+      roommateNationalIdsArray.removeAt(0);
+    }
+
+    // Add a control for each uploaded file
+    for (let i = 0; i < totalUploadedCount; i++) {
+      roommateNationalIdsArray.push(
+        this.fb.control({ value: `roommateNationalId_${i}`, disabled: false }),
+      );
+    }
+  }
+
+  addRoommate(): void {
+    const current = this.roommateNationalIdFiles();
+    if (current.length < 2) {
+      this.roommateNationalIdFiles.set([
+        ...current,
+        {
+          single: {
+            file: null,
+            preview: null,
+            uploading: false,
+            progress: 0,
+            downloadURL: null,
+            error: null,
+          },
+          double: {
+            front: {
+              file: null,
+              preview: null,
+              uploading: false,
+              progress: 0,
+              downloadURL: null,
+              error: null,
+            },
+            back: {
+              file: null,
+              preview: null,
+              uploading: false,
+              progress: 0,
+              downloadURL: null,
+              error: null,
+            },
+          },
+        },
+      ]);
+      // Add corresponding mode for the new roommate
+      this.roommateNationalIdModes.update((modes) => [...modes, 'single']);
+    }
+  }
+
+  removeRoommate(index: number): void {
+    this.roommateNationalIdFiles.update((current) => {
+      const updated = [...current];
+      const roommate = updated[index];
+      // Revoke preview URLs for single and double modes
+      if (roommate.single.preview?.startsWith('blob:')) {
+        URL.revokeObjectURL(roommate.single.preview);
+      }
+      if (roommate.double.front.preview?.startsWith('blob:')) {
+        URL.revokeObjectURL(roommate.double.front.preview);
+      }
+      if (roommate.double.back.preview?.startsWith('blob:')) {
+        URL.revokeObjectURL(roommate.double.back.preview);
+      }
+      updated.splice(index, 1);
+      return updated;
+    });
+
+    // Remove corresponding mode for the roommate
+    this.roommateNationalIdModes.update((modes) => {
+      const updated = [...modes];
+      updated.splice(index, 1);
+      return updated;
+    });
+
+    this.updateRoommateNationalIdsFormArray();
+  }
+
+  canAddMoreRoommates(): boolean {
+    return this.roommateNationalIdFiles().length < 2;
+  }
+
+  getRoommateNationalIdFile(index: number, mode: 'single' | 'double', fileType?: 'front' | 'back'): FileUpload {
+    const roommate = this.roommateNationalIdFiles()[index];
+    if (mode === 'single') {
+      return roommate.single;
+    } else if (mode === 'double' && fileType === 'front') {
+      return roommate.double.front;
+    } else if (mode === 'double' && fileType === 'back') {
+      return roommate.double.back;
+    }
+    return {
+      file: null,
+      preview: null,
+      uploading: false,
+      progress: 0,
+      downloadURL: null,
+      error: null,
+    };
   }
 
   // ─────────────────────────────────────────
@@ -416,6 +731,21 @@ export class ReservationFormComponent implements OnDestroy {
           formData.append('nationalIds', this.nationalIdBackFile().file!);
         }
       }
+
+      // Add roommate national ID files based on each roommate's mode
+      this.roommateNationalIdFiles().forEach((roommate, index) => {
+        const mode = this.roommateNationalIdModes()[index];
+        if (mode === 'single' && roommate.single.file) {
+          formData.append('roommateNationalIds', roommate.single.file);
+        } else if (mode === 'double') {
+          if (roommate.double.front.file) {
+            formData.append('roommateNationalIds', roommate.double.front.file);
+          }
+          if (roommate.double.back.file) {
+            formData.append('roommateNationalIds', roommate.double.back.file);
+          }
+        }
+      });
 
       // Submit to backend
       const response = await this.http
