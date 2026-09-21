@@ -84,7 +84,7 @@ export class ReservationFormComponent implements OnDestroy {
       [RESERVATION_FORM_FIELDS.ROOMMATE_STAFF_ID]: this.fb.array([this.fb.control('')]),
       busReservation: this.fb.array([], [Validators.required]),
       nationalIds: this.fb.array([], [Validators.required]),
-      roommateNationalIds: this.fb.array([], [Validators.required]),
+      roommateNationalIds: this.fb.array([]),
       [RESERVATION_FORM_FIELDS.NOTE]: [''],
     },
     // { validators: this.createSubmitValidator() },
