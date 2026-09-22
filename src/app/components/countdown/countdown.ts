@@ -180,7 +180,7 @@ export class CountdownComponent {
   }
 
   private updateCountdown(): void {
-    const targetDate = new Date('2026-09-23T23:59:59').getTime();
+    const targetDate = new Date('2026-09-22T23:59:59').getTime();
     const now = new Date().getTime();
     const difference = targetDate - now;
 
